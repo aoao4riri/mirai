@@ -1,7 +1,7 @@
 #define _GNU_SOURCE
 
 #include <stdio.h>
-#include <stribg.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/socket.h>
