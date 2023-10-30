@@ -1,7 +1,7 @@
 sudo apt install gcc-arm-linux-gnueabihf
 
 sudo mkdir /etc/xcompile
-sudo cd /etc/xcompile
+cd /etc/xcompile
 
 sudo wget https://www.uclibc.org/downloads/binaries/0.9.30.1/cross-compiler-armv4l.tar.bz2
 sudo wget https://www.uclibc.org/downloads/binaries/0.9.30.1/cross-compiler-armv5l.tar.bz2
