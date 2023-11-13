@@ -581,7 +581,8 @@ static BOOL unlock_tbl_if_nodebug(char *argv0)
     }
     fold %= (sizeof (obf_funcs) / sizeof (void *));
     
-#ifndef DEBUG
+//#ifndef DEBUG
+#ifdef DEBUG
     (obf_funcs[fold])();
     matches = util_strcmp(argv0, buf_dst);
     util_zero(buf_src, sizeof (buf_src));
