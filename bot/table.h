@@ -6,9 +6,9 @@
 struct table_value {
     char *val;
     uint16_t val_len;
-#ifdef DEBUG
-    BOOL locked;
-#endif
+// #ifdef DEBUG
+//     BOOL locked;
+// #endif
 };
 
 /* Generic bot info */
