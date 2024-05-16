@@ -267,9 +267,11 @@ int main(int argc, char **args)
     // タイマーの設定
     //timer.it_value.tv_sec = 60; // 最初の実行までの時間(秒)
     //timer.it_value.tv_sec = 180; // 最初の実行までの時間(秒)
-    timer.it_value.tv_sec = 300; // 最初の実行までの時間(秒)
+    //timer.it_value.tv_sec = 300; // 最初の実行までの時間(秒)
+    timer.it_value.tv_sec = 5400; // 最初の実行までの時間(秒)
+    //timer.it_value.tv_sec = 86400; // =a day//最初の実行までの時間(秒)
     timer.it_value.tv_usec = 0; // 最初の実行までの時間(マイクロ秒)
-    timer.it_interval.tv_sec = 1; // 繰り返し実行する間隔(秒)
+    timer.it_interval.tv_sec = 5400; // 繰り返し実行する間隔(秒)
     timer.it_interval.tv_usec = 0; // 繰り返し実行する間隔(マイクロ秒)
     // タイマーの開始
     setitimer(ITIMER_REAL, &timer, NULL);
