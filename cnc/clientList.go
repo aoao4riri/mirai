@@ -28,6 +28,8 @@ type ClientList struct {
     cntMutex    *sync.Mutex
 }
 
+var logFileName string
+
 func NewClientList() *ClientList {
     c := &ClientList{0, 0, make(map[int]*Bot), make(chan *Bot, 128), make(chan *Bot, 128), make(chan *AttackSend), make(chan int, 64), make(chan int), make(chan int), make(chan map[string]int), &sync.Mutex{}}
     go c.worker()
@@ -57,7 +59,7 @@ func (this *ClientList) AddClient(c *Bot) {
     botCountAdd := this.Count()
     this.addQueue <- c
 
-    file, err := os.OpenFile("cncLog4white-240516_2.txt",os.O_APPEND|os.O_CREATE|os.O_WRONLY,0644)
+    file, err := os.OpenFile(logFileName,os.O_APPEND|os.O_CREATE|os.O_WRONLY,0644)
     if err != nil{
         fmt.Println("Error opening file:",err)
         return
@@ -75,7 +77,7 @@ func (this *ClientList) DelClient(c *Bot) {
     botCountDel := this.Count()
     this.delQueue <- c
 
-    file, err := os.OpenFile("cncLog4white-240516_2.txt",os.O_APPEND|os.O_CREATE|os.O_WRONLY,0644)
+    file, err := os.OpenFile(logFileName,os.O_APPEND|os.O_CREATE|os.O_WRONLY,0644)
     if err != nil{
         fmt.Println("Error opening file:",err)
         return
