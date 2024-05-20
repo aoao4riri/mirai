@@ -5,6 +5,7 @@ import (
     "net"
     "errors"
     "time"
+    "os"
 )
 
 const DatabaseAddr string   = "127.0.0.1"
@@ -16,6 +17,14 @@ var clientList *ClientList = NewClientList()
 var database *Database = NewDatabase(DatabaseAddr, DatabaseUser, DatabasePass, DatabaseTable)
 
 func main() {
+    fmt.Println(len(os.Args))
+    if len(os.Args) < 2 {
+        fmt.Println("Usage: program <logfile>")
+        os.Exit(1)
+    }
+
+    logFileName = os.Args[1]
+
     tel, err := net.Listen("tcp", "0.0.0.0:23")
     if err != nil {
         fmt.Println(err)
